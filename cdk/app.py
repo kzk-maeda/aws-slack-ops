@@ -3,7 +3,7 @@ import os
 
 import aws_cdk as cdk
 
-from cdk.cdk_stack import CdkStack
+from stacks.cdk_stack import CdkStack
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -18,7 +18,6 @@ CdkStack(app, "CdkStack",
     # and Region that are implied by the current CLI configuration.
 
     env=cdk.Environment(account=os.getenv('AWS_ACCOUNT'), region=os.getenv('AWS_REGION')),
-
     # Uncomment the next line if you know exactly what Account and Region you
     # want to deploy the stack to. */
 
