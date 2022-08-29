@@ -9,6 +9,9 @@ from aws_cdk import (
 )
 from constructs import Construct
 
+from .auth_stack import Authenticator
+
+
 class CdkStack(Stack):
 
     def __init__(
@@ -19,14 +22,23 @@ class CdkStack(Stack):
         slack_channel_id = os.getenv('SLACK_CHANNEL_ID') or ""
         if "" in [slack_channel_config_name, slack_workspace_id, slack_channel_id]:
             raise
+        
+        ### fron Layer
+        authenticator = Authenticator(
+            self, "Authenticator"
+        )
 
+        ### Lambda Resources
         main_lambda = _lambda.Function(
             self, 'MainHandler',
             runtime=_lambda.Runtime.PYTHON_3_9,
             code=_lambda.Code.from_asset('lambda'),
-            handler='main.handler'
+            handler='main.handler',
+            layers=[authenticator.layer]
         )
+        authenticator.table.grant_read_write_data(main_lambda)
 
+        ### Chatbot Resources
         slack_bot = _chatbot.SlackChannelConfiguration(
             self, 'TestChannel1',
             slack_channel_configuration_name=slack_channel_config_name,
@@ -40,4 +52,3 @@ class CdkStack(Stack):
             ],
             resources=[main_lambda.function_arn]
         ))
-
