@@ -23,7 +23,7 @@ class Authenticator(Construct):
             read_capacity=5,
             removal_policy=RemovalPolicy.DESTROY,
         )
-        self._insert_initial_data()
+        # self._insert_initial_data()
 
         self._layer = _lambda.LayerVersion(
             self, 'AuthLayer',
@@ -52,6 +52,7 @@ class Authenticator(Construct):
         else:
             table.put_item(
                 Item={
-                    "user_id": "test_id"
+                    "user_id": "test_id",
+                    "role": "user"
                 }
             )

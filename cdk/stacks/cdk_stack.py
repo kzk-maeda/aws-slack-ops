@@ -1,5 +1,6 @@
 import os
 from typing import List
+from unicodedata import name
 from aws_cdk import (
     # Duration,
     Stack,
@@ -31,6 +32,7 @@ class CdkStack(Stack):
         ### Lambda Resources
         main_lambda = _lambda.Function(
             self, 'MainHandler',
+            function_name="main_cdk",
             runtime=_lambda.Runtime.PYTHON_3_9,
             code=_lambda.Code.from_asset('lambda'),
             handler='main.handler',
